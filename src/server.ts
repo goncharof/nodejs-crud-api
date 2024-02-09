@@ -5,7 +5,12 @@ const port = 3000;
 
 const server = http.createServer(async (req, res) => {
   try {
-    await handle(req, res);
+    const data = await handle(req);
+
+    console.log(data, "data");
+
+    res.writeHead(200);
+    res.end(data.body);
   } catch (error) {
     res.writeHead(error.status);
     res.end(error.message);

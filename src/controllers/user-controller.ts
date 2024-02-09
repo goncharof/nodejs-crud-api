@@ -1,5 +1,7 @@
 import User from "../models/user";
 
+const list = () => JSON.stringify(User.findAll());
+
 function create(req, res) {
   const { username, age, hobbies } = req.body;
   if (!username || !age) {
@@ -57,16 +59,5 @@ function remove(req, res) {
     return res.status(500).send(error.message);
   }
 }
-
-const list = () => {
-  return new Promise((resolve, reject) => {
-    reject({ message: "Internal server error", status: 500 });
-    // try {
-    //   resolve(User.findAll());
-    // } catch {
-    //   reject({ message: "Internal server error", status: 500 });
-    // }
-  });
-};
 
 export { create, getById, update, remove, list };

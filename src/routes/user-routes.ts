@@ -1,12 +1,30 @@
-import { IncomingMessage, ServerResponse } from "node:http";
-import { list, create } from "../controllers/user-controller";
+import { IncomingMessage } from "node:http";
+import { list } from "../controllers/user-controller";
 
-export const handle = async (req: IncomingMessage, res: ServerResponse) => {
-  if (req.method === "GET" && req.url === "/users") {
-    return list();
-  } else if (req.method === "POST" && req.url === "/users") {
-    create(req, res);
-  }
+export const handle = async (
+  req: IncomingMessage,
+): Promise<{ body: string; status: number }> => {
+  console.log("req", req.url);
+  return new Promise((resolve, reject) => {
+    try {
+      if (req.method === "GET" && req.url === "/users") {
+        resolve({
+          body: list(),
+          status: 200,
+        });
+      } else {
+        resolve({
+          body: "Not found",
+          status: 404,
+        });
+      }
+    } catch {
+      reject({ message: "Internal server error", status: 500 });
+    }
+  });
+
+  //   create(req, res);
+  // }
   // Add other CRUD operations
 };
 
