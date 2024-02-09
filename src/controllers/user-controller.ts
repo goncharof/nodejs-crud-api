@@ -1,6 +1,6 @@
 import User from "../models/user";
 
-const list = () => JSON.stringify(User.findAll());
+const list = () => ({ body: JSON.stringify(User.findAll()), status: 200 });
 
 function create(req, res) {
   const { username, age, hobbies } = req.body;

@@ -8,10 +8,7 @@ export const handle = async (
   return new Promise((resolve, reject) => {
     try {
       if (req.method === "GET" && req.url === "/users") {
-        resolve({
-          body: list(),
-          status: 200,
-        });
+        resolve(list());
       } else {
         resolve({
           body: "Not found",
