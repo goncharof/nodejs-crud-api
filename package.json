@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "task is to implement simple CRUD API using in-memory database underneath",
   "scripts": {
-    "dev": "nodemon",
+    "start:dev": "nodemon",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -37,5 +37,9 @@
     "typescript": "^5.3.3",
     "webpack": "^5.90.1",
     "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.1",
+    "uuid": "^9.0.1"
   }
 }
