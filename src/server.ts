@@ -9,7 +9,7 @@ const server = http.createServer(async (req, res) => {
 
     console.log(data, "data");
 
-    res.writeHead(200);
+    res.writeHead(data.status);
     res.end(data.body);
   } catch (error) {
     res.writeHead(error.status);
