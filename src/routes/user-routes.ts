@@ -1,14 +1,16 @@
 import { IncomingMessage } from "node:http";
-import { list } from "../controllers/user-controller";
+import { list, create } from "../controllers/user-controller";
 
 export const handle = async (
   req: IncomingMessage,
 ): Promise<{ body: string; status: number }> => {
   console.log("req", req.url);
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
-      if (req.method === "GET" && req.url === "/users") {
+      if (req.method === "GET" && req.url === "/api/users") {
         resolve(list());
+      } else if (req.method === "POST" && req.url === "/api/users") {
+        resolve(await create(req));
       } else {
         resolve({
           body: "Not found",

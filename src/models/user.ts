@@ -11,12 +11,41 @@ interface IUser extends INewUser {
   id: string;
 }
 
+function validateUser(user: INewUser) {
+  if (!user.username) {
+    throw new Error("Username is required");
+  }
+  if (!user.age || typeof user.age !== "number") {
+    throw new Error("Age is required");
+  }
+  if (
+    !user.hobbies ||
+    !Array.isArray(user.hobbies) ||
+    user.hobbies.some((hobby) => typeof hobby !== "string")
+  ) {
+    throw new Error("Hobbies are required");
+  }
+}
+
 const save = (user: INewUser) => {
-  db.push({
-    id: uuidv4(),
-    hobbies: [],
-    ...user,
-  });
+  try {
+    validateUser(user);
+
+    db.push({
+      id: uuidv4(),
+      ...user,
+    });
+
+    return {
+      body: JSON.stringify(db[db.length - 1]),
+      status: 201,
+    };
+  } catch (error) {
+    return {
+      body: JSON.stringify({ error: error.message }),
+      status: 400,
+    };
+  }
 };
 
 const update = (user: IUser) => {

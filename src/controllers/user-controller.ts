@@ -1,20 +1,23 @@
+import { IncomingMessage } from "node:http";
 import User from "../models/user";
 
 const list = () => ({ body: JSON.stringify(User.findAll()), status: 200 });
+const create = async (
+  req: IncomingMessage,
+): Promise<{ body: string; status: number }> => {
+  return new Promise(async (resolve) => {
+    let body = "";
+    req.on("data", (chunk) => {
+      body += chunk.toString();
+    });
 
-function create(req, res) {
-  const { username, age, hobbies } = req.body;
-  if (!username || !age) {
-    return res.status(400).send("Username and age are required.");
-  }
+    req.on("end", () => {
+      const { username, age, hobbies } = JSON.parse(body);
 
-  try {
-    const newUser = User.save({ username, age, hobbies });
-    return res.status(201).json(newUser);
-  } catch (error) {
-    return res.status(500).send(error.message);
-  }
-}
+      resolve(User.save({ username, age, hobbies }));
+    });
+  });
+};
 
 function getById(req, res) {
   const { id } = req.params;
