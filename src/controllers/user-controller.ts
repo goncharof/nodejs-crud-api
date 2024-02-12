@@ -38,27 +38,12 @@ const update = async (id: string, req: IncomingMessage) => {
   );
 };
 
-function getById(req, res) {
-  const { id } = req.params;
-  try {
-    const user = User.findById(id);
-    if (!user) {
-      return res.status(404).send("User not found.");
-    }
-    return res.json(user);
-  } catch (error) {
-    return res.status(500).send(error.message);
-  }
+function getById(id: string) {
+  return User.findById(id);
 }
 
-function remove(req, res) {
-  const { id } = req.params;
-  try {
-    const user = User.deleteById(id);
-    return res.json(user);
-  } catch (error) {
-    return res.status(500).send(error.message);
-  }
+function remove(id: string) {
+  return User.deleteById(id);
 }
 
 export { create, getById, update, remove, list };

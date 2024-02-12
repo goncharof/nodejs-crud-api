@@ -7,10 +7,6 @@ export interface INewUser {
   hobbies: string[];
 }
 
-// interface IUser extends INewUser {
-//   id: string;
-// }
-
 const validateUser = (user: INewUser) => {
   if (!user.username) {
     throw new Error("Username is required");
@@ -85,7 +81,17 @@ const findById = (id: string) => {
   try {
     validateId(id);
 
-    return db.find((user) => user.id === id);
+    const user = db.find((user) => user.id === id);
+
+    return user
+      ? {
+          body: JSON.stringify(user),
+          status: 200,
+        }
+      : {
+          body: JSON.stringify({ error: "User not found" }),
+          status: 404,
+        };
   } catch (error) {
     return {
       body: JSON.stringify({ error: error.message }),
@@ -97,11 +103,28 @@ const findById = (id: string) => {
 const findAll = () => db;
 
 const deleteById = (id: string) => {
-  const index = db.findIndex((user) => user.id === id);
-  if (index !== -1) {
-    return db.splice(index, 1)[0];
+  try {
+    validateId(id);
+
+    const user = db.find((user) => user.id === id);
+
+    if (user) {
+      db.splice(db.indexOf(user), 1);
+      return {
+        status: 204,
+      };
+    }
+
+    return {
+      body: JSON.stringify({ error: "User not found" }),
+      status: 404,
+    };
+  } catch (error) {
+    return {
+      body: JSON.stringify({ error: error.message }),
+      status: 400,
+    };
   }
-  throw new Error(`User with ID ${id} not found`);
 };
 
 export default { save, update, findById, findAll, deleteById };
