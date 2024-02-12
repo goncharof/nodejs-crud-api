@@ -30,10 +30,7 @@ export const handle = async (
             // resolve(await update(id, req));
             break;
           case "PUT":
-            resolve({
-              body: JSON.stringify(update(id, req)),
-              status: 200,
-            });
+            resolve(await update(id, req));
             break;
           //       let body = "";
           //       req.on("data", (chunk) => {
