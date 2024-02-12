@@ -10,7 +10,6 @@ export const handle = async (
   req: IncomingMessage,
 ): Promise<{ body?: string; status: number }> => {
   const url = req.url.replace(/^\/+|\/+$/g, "");
-  console.log("req", url);
 
   return new Promise(async (resolve, reject) => {
     try {
