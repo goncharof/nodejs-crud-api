@@ -5,7 +5,7 @@ import { Server, request } from "node:http";
 import { server } from "./server";
 import { db } from "./utils/database";
 
-const aP = availableParallelism();
+const threadsCount = availableParallelism();
 const portMaster = 4000;
 
 if (cluster.isPrimary) {
@@ -18,7 +18,7 @@ if (cluster.isPrimary) {
     }
   });
 
-  for (let i = 0; i < aP - 1; i++) {
+  for (let i = 0; i < threadsCount - 1; i++) {
     cluster.fork({ PORT: portMaster + i + 1 });
   }
 
@@ -27,7 +27,9 @@ if (cluster.isPrimary) {
     cluster.fork();
   });
 
-  const workersPorts = [...Array(aP - 1)].map((_, i) => portMaster + i + 1);
+  const workersPorts = [...Array(threadsCount - 1)].map(
+    (_, i) => portMaster + i + 1,
+  );
   let currentworkersPortsIndex = 0;
 
   const balancer = createServer((req, res) => {
