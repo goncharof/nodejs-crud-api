@@ -1,7 +1,8 @@
 import http from "http";
 import { handle } from "./routes/user-routes";
+import "dotenv/config";
 
-const port = 3000;
+const port = process.env.PORT;
 
 const server = http.createServer(async (req, res) => {
   try {
