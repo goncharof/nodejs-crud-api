@@ -6,5 +6,7 @@
 commands:
 1. npm i
 2. npm run start:dev
-3. npm run test
-4. npm run start:prod
+3. npm run start:prod
+4. npm run test
+5. npm run start:multi 
+
