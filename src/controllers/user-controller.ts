@@ -28,17 +28,6 @@ const create = async (
 const update = async (id: string, req: IncomingMessage) => {
   const { username, age, hobbies } = await readBody(req);
 
-  console.log(
-    User.update(
-      id,
-      Object.fromEntries(
-        Object.entries({ username, age, hobbies }).filter(
-          ([, v]) => v !== undefined,
-        ),
-      ),
-    ),
-  );
-
   return User.update(
     id,
     Object.fromEntries(
