@@ -33,13 +33,13 @@ const save = (user: INewUser) => {
   try {
     validateUser(user);
 
-    db.push({
+    db.users.push({
       id: uuidv4(),
       ...user,
     });
 
     return {
-      body: JSON.stringify(db[db.length - 1]),
+      body: JSON.stringify(db.users[db.users.length - 1]),
       status: 201,
     };
   } catch (error) {
@@ -54,7 +54,7 @@ const update = (id: string, data: Partial<INewUser>) => {
   try {
     validateId(id);
 
-    const user = db.find((u) => u.id === id);
+    const user = db.users.find((u) => u.id === id);
 
     if (!user) {
       return {
@@ -81,7 +81,7 @@ const findById = (id: string) => {
   try {
     validateId(id);
 
-    const user = db.find((user) => user.id === id);
+    const user = db.users.find((user) => user.id === id);
 
     return user
       ? {
@@ -100,16 +100,16 @@ const findById = (id: string) => {
   }
 };
 
-const findAll = () => db;
+const findAll = () => db.users;
 
 const deleteById = (id: string) => {
   try {
     validateId(id);
 
-    const user = db.find((user) => user.id === id);
+    const user = db.users.find((user) => user.id === id);
 
     if (user) {
-      db.splice(db.indexOf(user), 1);
+      db.users.splice(db.users.indexOf(user), 1);
       return {
         status: 204,
       };

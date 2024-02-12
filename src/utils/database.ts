@@ -1,3 +1,5 @@
-const db = [];
+const db = {
+  users: [],
+};
 
 export { db };
