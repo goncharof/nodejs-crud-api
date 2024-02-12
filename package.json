@@ -5,6 +5,7 @@
   "scripts": {
     "start:dev": "nodemon",
     "start:prod": "npm run build && node dist/server.js",
+    "start:multi": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/multi-server.ts",
     "test": "jest --silent",
     "test:verbose": "jest",
     "build": "webpack --mode=production --node-env=production",
