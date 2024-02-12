@@ -49,7 +49,7 @@ export const handle = async (
         }
       } else {
         resolve({
-          body: "Not found",
+          body: JSON.stringify({ error: "Not found" }),
           status: 404,
         });
       }
