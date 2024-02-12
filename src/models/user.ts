@@ -11,7 +11,7 @@ const validateUser = (user: INewUser) => {
   if (!user.username) {
     throw new Error("Username is required");
   }
-  if (!user.age || typeof user.age !== "number") {
+  if (!user.age || typeof user.age !== "number" || user.age <= 0) {
     throw new Error("Age is required");
   }
   if (
