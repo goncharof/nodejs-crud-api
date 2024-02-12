@@ -1,4 +1,4 @@
-import http from "http";
+import http from "node:http";
 import { handle } from "./routes/user-routes";
 import "dotenv/config";
 
