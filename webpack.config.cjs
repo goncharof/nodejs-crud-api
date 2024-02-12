@@ -5,7 +5,7 @@ const isProduction = process.env.NODE_ENV == "production";
 
 const config = {
   target: 'node',
-  entry: "./src/index.ts",
+  entry: "./src/single-start.ts",
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "server.js",
