@@ -33,10 +33,12 @@ const save = (user: INewUser) => {
   try {
     validateUser(user);
 
-    db.users.push({
-      id: uuidv4(),
-      ...user,
-    });
+    let id = uuidv4();
+    while (db.users.some((u) => u.id === id)) {
+      id = uuidv4();
+    }
+
+    db.users.push({ id, ...user });
 
     return {
       body: JSON.stringify(db.users[db.users.length - 1]),
