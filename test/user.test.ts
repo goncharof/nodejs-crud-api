@@ -97,7 +97,7 @@ describe("some tests for API (not less than 3 scenarios)", () => {
     expect(response.status).toBe(400);
   });
 
-  test.only("code 404", async () => {
+  test("code 404", async () => {
     const validId = uuidv4();
 
     response = await request.get(`/api/users/${validId}`);
