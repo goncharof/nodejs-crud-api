@@ -1,22 +1,41 @@
 import { IncomingMessage } from "node:http";
-import User from "../models/user";
+import User, { INewUser } from "../models/user";
 
-const list = () => ({ body: JSON.stringify(User.findAll()), status: 200 });
-const create = async (
-  req: IncomingMessage,
-): Promise<{ body: string; status: number }> => {
-  return new Promise(async (resolve) => {
+const readBody = (req: IncomingMessage): Promise<INewUser> => {
+  return new Promise((resolve) => {
     let body = "";
     req.on("data", (chunk) => {
       body += chunk.toString();
     });
-
     req.on("end", () => {
-      const { username, age, hobbies } = JSON.parse(body);
-
-      resolve(User.save({ username, age, hobbies }));
+      resolve(JSON.parse(body));
     });
   });
+};
+
+const list = () => ({ body: JSON.stringify(User.findAll()), status: 200 });
+
+const create = async (
+  req: IncomingMessage,
+): Promise<{ body: string; status: number }> => {
+  return new Promise(async (resolve) => {
+    const { username, age, hobbies } = await readBody(req);
+
+    resolve(User.save({ username, age, hobbies }));
+  });
+};
+
+const update = async (id: string, req: IncomingMessage) => {
+  const { username, age, hobbies } = await readBody(req);
+
+  return User.update(
+    id,
+    Object.fromEntries(
+      Object.entries({ username, age, hobbies }).filter(
+        ([, v]) => v !== undefined,
+      ),
+    ),
+  );
 };
 
 function getById(req, res) {
@@ -26,27 +45,6 @@ function getById(req, res) {
     if (!user) {
       return res.status(404).send("User not found.");
     }
-    return res.json(user);
-  } catch (error) {
-    return res.status(500).send(error.message);
-  }
-}
-
-function update(req, res) {
-  const { id } = req.params;
-  const { username, age, hobbies } = req.body;
-
-  try {
-    let user = User.findById(id);
-    if (!user) {
-      return res.status(404).send("User not found.");
-    }
-
-    user.username = username || user.username;
-    user.age = age || user.age;
-    user.hobbies = hobbies || user.hobbies;
-
-    user = user.update();
     return res.json(user);
   } catch (error) {
     return res.status(500).send(error.message);

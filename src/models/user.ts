@@ -1,17 +1,17 @@
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4, validate as uuidValidate } from "uuid";
 import { db } from "../utils/database";
 
-interface INewUser {
+export interface INewUser {
   username: string;
   age: number;
   hobbies: string[];
 }
 
-interface IUser extends INewUser {
-  id: string;
-}
+// interface IUser extends INewUser {
+//   id: string;
+// }
 
-function validateUser(user: INewUser) {
+const validateUser = (user: INewUser) => {
   if (!user.username) {
     throw new Error("Username is required");
   }
@@ -25,7 +25,13 @@ function validateUser(user: INewUser) {
   ) {
     throw new Error("Hobbies are required");
   }
-}
+};
+
+const validateId = (id: string) => {
+  if (!uuidValidate(id)) {
+    throw new Error("Invalid ID");
+  }
+};
 
 const save = (user: INewUser) => {
   try {
@@ -48,17 +54,44 @@ const save = (user: INewUser) => {
   }
 };
 
-const update = (user: IUser) => {
-  const index = db.findIndex((u) => user.id === u.d);
-  if (index !== -1) {
-    db[index] = this;
-    return this;
+const update = (id: string, data: Partial<INewUser>) => {
+  try {
+    validateId(id);
+
+    const user = db.find((u) => u.id === id);
+
+    if (!user) {
+      return {
+        body: JSON.stringify({ error: "User not found" }),
+        status: 404,
+      };
+    }
+
+    validateUser({ ...user, ...data });
+
+    return {
+      body: JSON.stringify(Object.assign(user, data)),
+      status: 200,
+    };
+  } catch (error) {
+    return {
+      body: JSON.stringify({ error: error.message }),
+      status: 400,
+    };
   }
-  throw new Error(`User with ID ${user.id} not found`);
 };
 
 const findById = (id: string) => {
-  return db.find((user) => user.id === id);
+  try {
+    validateId(id);
+
+    return db.find((user) => user.id === id);
+  } catch (error) {
+    return {
+      body: JSON.stringify({ error: error.message }),
+      status: 400,
+    };
+  }
 };
 
 const findAll = () => db;
